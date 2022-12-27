@@ -31,7 +31,6 @@
 
 - hosts: localhost
   connection: local
-  become: yes
   tasks:
   - name: Sender
     tags: sender
@@ -47,5 +46,5 @@
   - name: Print Receiver Stats
     tags: receiver
     debug: msg="Average Receiver iperf bandwidth {{ receiver.stdout }} Mbits/s"
-  - name: Archieve Results
-    shell: "mv results/iperf*.out archieve-results/iperf*.out"
+  - name: Create Directory and Archieve Results
+    shell: "mkdir -p archieve-results && mv results/iperf*.out archieve-results/iperf*.out"
