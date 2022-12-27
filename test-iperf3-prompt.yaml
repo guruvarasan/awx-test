@@ -1,29 +1,30 @@
-- hosts: servers
-  #vars_prompt:
-  #- name: servers
-  # prompt: "Destination IP address (Server)"
-  # private: false
+- hosts: "{{ servers }}"
+  become: yes
   tasks:
+  - name: Ensure iperf3 is at the latest version
+    ansible.builtin.apt:
+      name: iperf3
+      state: latest
+      install_recommends: yes
+      update_cache: yes
+      cache_valid_time: 3600
   - name: Start iperf3 Server
     shell: iperf3 --server --one-off --daemon
 
-- hosts: clients
-  vars_prompt:
-  #- name: clients
-  # prompt: "Source IP address (Client)"
-  # private: false
-  - name: bandwidth
-    prompt: What is your Bandwidth in Mbps?
-    private: false
+- hosts: "{{ clients }}"
+  become: yes
   tasks:
-  - name: Set iperf3 Server
-    set_fact: iperf_server="{{ groups['servers'][groups['clients'].index(inventory_hostname)] }}"
-  - name: set output base
-    set_fact: output_base="{{ ansible_date_time.date }}_{{ ansible_date_time.hour }}{{ ansible_date_time.minute }}_{{ iperf_server }}.out"
+  - name: Ensure iperf3 is at the latest version
+    ansible.builtin.apt:
+      name: iperf3
+      state: latest
+      install_recommends: yes
+      update_cache: yes
+      cache_valid_time: 3600
   - name: Set iperf3 Out
-    set_fact: iperf_out="iperf_{{ output_base }}"
+    set_fact: iperf_out="iperf_results.out"
   - name: start client iperf
-    shell: "iperf3 -c {{ iperf_server }} 5201 --bitrate {{ bandwidth }} --bidir --time 10 >> {{ iperf_out }}"
+    shell: "iperf3 -c {{ servers }} 5201 --bitrate {{ bandwidth }} --bidir --time 10 >> {{ iperf_out }}"
   - name: Grab iperf Output
     fetch: src={{ iperf_out }} dest=results/ flat=yes
 
