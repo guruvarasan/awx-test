@@ -11,8 +11,6 @@
       cache_valid_time: 3600
   - name: Start iperf3 Server
     shell: iperf3 --server --one-off --daemon
-  - name: Set iperf3 Server
-    set_fact: iperf_server={{ inventory_hostname }}
 
 - hosts: "{{ clients }}"
   become: yes
@@ -26,10 +24,8 @@
       cache_valid_time: 3600
   - name: Set iperf3 Out
     set_fact: iperf_out="iperf_results.out"
-  - name: Print iperf3 server IP
-    debug: msg="Iperf3 Server IP {{ iperf_server }}"
   - name: Start iperf3 client
-    shell: "iperf3 -c {{ iperf_server }} 5201 --bitrate {{ bandwidth }} --bidir --time 10 >> {{ iperf_out }}"
+    shell: "iperf3 -c {{ servers }} 5201 --bitrate {{ bandwidth }} --bidir --time 10 >> {{ iperf_out }}"
   - name: Grab iperf3 Output
     fetch: src={{ iperf_out }} dest=results/ flat=yes
 
