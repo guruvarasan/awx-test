@@ -1,7 +1,8 @@
+---
 - hosts: "{{ servers }}"
   become: yes
   tasks:
-  - name: Ensure iperf3 is at the latest version
+  - name: Ensure iperf3 Server is at the latest version
     ansible.builtin.apt:
       name: iperf3
       state: latest
@@ -14,7 +15,7 @@
 - hosts: "{{ clients }}"
   become: yes
   tasks:
-  - name: Ensure iperf3 is at the latest version
+  - name: Ensure iperf3 clinet is at the latest version
     ansible.builtin.apt:
       name: iperf3
       state: latest
@@ -23,11 +24,11 @@
       cache_valid_time: 3600
   - name: Set iperf3 Out
     set_fact: iperf_out="iperf_results.out"
-  - name: Set iperf3 server
-    set_fact: iperf_server="{{ server }}.address"
-  - name: start client iperf
-    shell: "iperf3 -c {{ iperf_server }} 5201 --bitrate {{ bandwidth }} --bidir --time 10 >> {{ iperf_out }}"
-  - name: Grab iperf Output
+  - name: Print iperf3 server IP
+    debug: msg="Iperf3 Server IP {{ servers }}"
+  - name: Start iperf3 client
+    shell: "iperf3 -c {{ servers }} 5201 --bitrate {{ bandwidth }} --bidir --time 10 >> {{ iperf_out }}"
+  - name: Grab iperf3 Output
     fetch: src={{ iperf_out }} dest=results/ flat=yes
 
 - hosts: localhost
