@@ -40,6 +40,7 @@
   - name: Receiver
     tags: receiver
     shell: "tail -6 results/iperf*.out | awk '/receiver/ {sum+=$7} END { print sum}'"
+    register: receiver
   - name: Result
     tags: result
     shell: "tail -6 results/iperf*.out"
