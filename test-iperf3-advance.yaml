@@ -1,0 +1,56 @@
+---
+- hosts: "{{ servers }}"
+  become: yes
+  tasks:
+  - name: Ensure iperf3 Server is at the latest version
+    ansible.builtin.apt:
+      name: iperf3
+      state: latest
+      install_recommends: yes
+      update_cache: yes
+      cache_valid_time: 3600
+  - name: Start iperf3 Server
+    shell: iperf3 --server --port {{ s_port }} --one-off --daemon
+
+- hosts: "{{ clients }}"
+  become: yes
+  tasks:
+  - name: Ensure iperf3 clinet is at the latest version
+    ansible.builtin.apt:
+      name: iperf3
+      state: latest
+      install_recommends: yes
+      update_cache: yes
+      cache_valid_time: 3600
+  - name: Set iperf3 Out
+    set_fact: iperf_out="iperf_results.out"
+  - name: Start iperf3 client
+    shell: "iperf3 --client {{ servers }} --port {{ s_port }} --bitrate {{ bandwidth }} --time {{ duration }} {{ option_1 }} {{ option_2 }} >> {{ iperf_out }}"
+  - name: Grab iperf3 Output
+    fetch: src={{ iperf_out }} dest=results/ flat=yes
+
+- hosts: localhost
+  connection: local
+  tasks:
+  - name: Sender
+    tags: sender
+    shell: "tail -6 results/iperf*.out | awk '/sender/ {sum+=$7} END { print sum}'"
+    register: sender
+  - name: Receiver
+    tags: receiver
+    shell: "tail -6 results/iperf*.out | awk '/receiver/ {sum+=$7} END { print sum}'"
+  - name: Result
+    tags: result
+    shell: "tail -6 results/iperf*.out"
+    register: receiver
+  - name: Print Sender Stats
+    tags: sender
+    debug: msg="Average Sender iperf bandwidth {{ sender.stdout }} Mbits/s"
+  - name: Print Receiver Stats
+    tags: receiver
+    debug: msg="Average Receiver iperf bandwidth {{ receiver.stdout }} Mbits/s"
+  - name: Print Results
+    tags: result
+    debug: msg="Average Sender iperf bandwidth {{ result.stdout }} Mbits/s"
+  - name: Create Directory and Archieve Results
+    shell: "mkdir -p archieve-results && mv results/iperf*.out archieve-results/iperf*.out"
