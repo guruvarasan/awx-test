@@ -5,8 +5,6 @@
     shell: iperf3 --server --port {{ s_port }} --one-off --daemon
 - hosts: "{{ clients }}"
   tasks:
-  # - name: Set iperf3 Out
-  #  set_fact: iperf_out="iperf_results.out"
   - name: Start iperf3 client
     shell: "iperf3 --client {{ servers }} --port {{ s_port }} --bitrate {{ bandwidth }} --time {{ duration }} --cport {{ c_port }} --parallel {{ num_conn }} >> iperf_results.out"
   - name: Grab iperf3 Output
