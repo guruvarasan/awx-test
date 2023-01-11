@@ -5,7 +5,6 @@
     shell: iperf3 --server --port {{ s_port }} --one-off --daemon
 
 - hosts: "{{ clients }}"
-  become: yes
   tasks:
   - name: Set iperf3 Out
     set_fact: iperf_out="iperf_results.out"
