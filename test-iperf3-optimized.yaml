@@ -36,7 +36,7 @@
     debug: msg="Average Receiver iperf bandwidth {{ receiver.stdout }} Mbits/s"
   - name: Print Results
     tags: result
-    debug: msg="Result Summary: /n {{ result.stdout }}"
+    debug: msg="Result Summary: \n {{ result.stdout }}"
   - name: Create Directory and Archieve Results
     shell: "mkdir -p archieve-results && mv results/iperf*.out archieve-results/iperf*.out"
     
