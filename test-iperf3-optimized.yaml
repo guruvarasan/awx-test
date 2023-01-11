@@ -18,11 +18,11 @@
   tasks:
   - name: Sender
     tags: sender
-    shell: "tail -6 results/iperf*.out | awk '/sender/ {sum+=$7} END { print sum}'"
+    shell: "tail -6 results/iperf*.out | awk '/sender/ {sum+=$7} END { print sum }'"
     register: sender
   - name: Receiver
     tags: receiver
-    shell: "tail -6 results/iperf*.out | awk '/receiver/ {sum+=$7} END { print sum}'"
+    shell: "tail -6 results/iperf*.out | awk '/receiver/ {sum+=$7} END { print sum }'"
     register: receiver
   - name: Result
     tags: result
