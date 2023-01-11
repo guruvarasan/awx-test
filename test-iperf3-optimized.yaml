@@ -8,7 +8,7 @@
   - name: Set iperf3 Out
     set_fact: iperf_out="iperf_results.out"
   - name: Start iperf3 client
-    shell: "iperf3 --client {{ servers }} --port {{ s_port }} --bitrate {{ bandwidth }} --time {{ duration }} --cport 42985 --parallel {{ num_conn }} >> {{ iperf_out }}"
+    shell: "iperf3 --client {{ servers }} --port {{ s_port }} --bitrate {{ bandwidth }} --time {{ duration }} --cport {{ c_port }} --parallel {{ num_conn }} >> {{ iperf_out }}"
     # shell: "iperf3 --client {{ servers }} --port {{ s_port }} --bitrate {{ bandwidth }} --time {{ duration }} {{ option_1 }} {{ option_2 }} >> {{ iperf_out }}"
   - name: Grab iperf3 Output
     fetch: src={{ iperf_out }} dest=results/ flat=yes
