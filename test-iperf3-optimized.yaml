@@ -11,8 +11,9 @@
     shell: "iperf3 --client {{ servers }} --port {{ s_port }} --bitrate {{ bandwidth }} --time {{ duration }} --cport 42985 --parallel {{ num_conn }} >> {{ iperf_out }}"
     # shell: "iperf3 --client {{ servers }} --port {{ s_port }} --bitrate {{ bandwidth }} --time {{ duration }} {{ option_1 }} {{ option_2 }} >> {{ iperf_out }}"
   - name: Grab iperf3 Output
-    - fetch: src={{ iperf_out }} dest=results/ flat=yes
-    - shell: "mkdir -p iperf-test-archieve && mv iperf_results.out iperf-test-archieve/iperf_results.out"
+    fetch: src={{ iperf_out }} dest=results/ flat=yes
+  - name: Archieve test results
+    shell: "mkdir -p iperf-test-archieve && mv iperf_results.out iperf-test-archieve/iperf_results.out"
 
 - hosts: localhost
   connection: local
