@@ -6,7 +6,7 @@
 - hosts: "{{ clients }}"
   tasks:
   - name: Start iperf3 client
-    shell: "iperf3 --client {{ servers }} --port {{ s_port }} --bitrate {{ bandwidth }} --time {{ duration }} --cport {{ c_port }} --parallel {{ num_conn }} {{ udp_option }} >> iperf_results.out && cat iperf_results.out"
+    shell: "iperf3 --client {{ servers }} --port {{ s_port }} --bitrate {{ bandwidth }} --time {{ duration }} --cport {{ c_port }} --parallel {{ num_conn }} {{ udp_option }} >> iperf_results.out"
   - name: Grab iperf3 Output
     fetch: src=iperf_results.out dest=results/ flat=yes
   - name: Archieve test results
@@ -17,15 +17,15 @@
   tasks:
   - name: Sender
     tags: sender
-    shell: "tail -6 results/iperf*.out | awk '/sender/ {sum+=$7} END { print sum }'"
+    shell: "tail -4 results/iperf*.out | awk '/sender/ {sum+=$7} END { print sum }'"
     register: sender
   - name: Receiver
     tags: receiver
-    shell: "tail -6 results/iperf*.out | awk '/receiver/ {sum+=$7} END { print sum }'"
+    shell: "tail -4 results/iperf*.out | awk '/receiver/ {sum+=$7} END { print sum }'"
     register: receiver
   - name: Result
     tags: result
-    shell: "tail -6 results/iperf*.out"
+    shell: "tail -4 results/iperf*.out"
     register: result
   - name: Print Sender Stats
     tags: sender
