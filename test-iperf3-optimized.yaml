@@ -6,7 +6,7 @@
 - hosts: "{{ clients }}"
   tasks:
   - name: Start iperf3 client
-    shell: "iperf3 --client {{ servers }} --port {{ s_port }} --bitrate {{ bandwidth }} --time {{ duration }} --cport {{ c_port }} --parallel {{ num_conn }} >> iperf_results.out"
+    shell: "iperf3 --client {{ servers }} --port {{ s_port }} --bitrate {{ bandwidth }} --time {{ duration }} --cport {{ c_port }} --parallel {{ num_conn }} >> iperf_results.out && cat iperf_results.out"
   - name: Grab iperf3 Output
     fetch: src=iperf_results.out dest=results/ flat=yes
   - name: Archieve test results
