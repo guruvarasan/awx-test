@@ -1,0 +1,18 @@
+---
+- hosts: "{{ servers }}"
+  tasks:
+  - name: Start iperf3 Server
+    shell: iperf3 --server --port {{ s_port }} --one-off --daemon
+- hosts: "{{ clients }}"
+  tasks:
+  - name: Start iperf3 client
+    tags: result
+    shell: "iperf3 --client {{ servers }} --port {{ s_port }} --bitrate {{ bandwidth }} --time {{ duration }} --cport {{ c_port }} --parallel {{ num_conn }}"
+    register: result
+  - name: Print Results
+    tags: result
+    debug:
+      msg:
+      - "Result Summary:"
+      - "{{ result.stdout }}"
+      
