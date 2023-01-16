@@ -7,7 +7,7 @@
   tasks:
   - name: Start iperf3 client
     tags: result
-    shell: "iperf3 --client {{ servers }} --port {{ s_port }} --bitrate {{ bandwidth }} --time {{ duration }} --cport {{ c_port }} --parallel {{ num_conn }}"
+    shell: "iperf3 --client {{ servers }} --port {{ s_port }} --bitrate {{ bandwidth }} --time {{ duration }} --cport {{ c_port }} --parallel {{ num_conn }} {{ udp_option }}"
     register: result
   - name: Print Results
     tags: result
