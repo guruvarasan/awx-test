@@ -4,6 +4,7 @@
   - name: Start iperf3 Server
     shell: iperf3 --server --port {{ s_port }} --one-off --daemon
 - hosts: "{{ clients }}"
+  become: true
   tasks:
   - name: Start iperf3 client
     shell: "iperf3 --client {{ servers }} --port {{ s_port }} --bitrate {{ bandwidth }} --time {{ duration }} --cport {{ c_port }} --parallel {{ num_conn }} {{ udp_option }} >> iperf_results.out"
